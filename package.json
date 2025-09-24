@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@jbrowse/core": "^3.0.0",
     "@jbrowse/react-app2": "^3.6.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
