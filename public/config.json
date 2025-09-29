@@ -1,0 +1,28 @@
+{
+  "assemblies": [
+    {
+      "name": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29.fasta",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29.fasta.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    }
+  ],
+  "configuration": {},
+  "connections": [],
+  "defaultSession": {
+    "name": "New Session"
+  },
+  "tracks": []
+}
