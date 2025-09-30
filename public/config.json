@@ -1,18 +1,36 @@
 {
   "assemblies": [
     {
-      "name": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29",
+      "name": "GCA_000004695.1_dicty_2.7_genomic.fna",
       "sequence": {
         "type": "ReferenceSequenceTrack",
-        "trackId": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29-ReferenceSequenceTrack",
+        "trackId": "GCA_000004695.1_dicty_2.7_genomic.fna-ReferenceSequenceTrack",
         "adapter": {
           "type": "IndexedFastaAdapter",
           "fastaLocation": {
-            "uri": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29.fasta",
+            "uri": "GCA_000004695.1_dicty_2.7_genomic.fna",
             "locationType": "UriLocation"
           },
           "faiLocation": {
-            "uri": "uniprotkb_proteome_UP000002195_AND_revi_2025_09_29.fasta.fai",
+            "uri": "GCA_000004695.1_dicty_2.7_genomic.fna.fai",
+            "locationType": "UriLocation"
+          }
+        }
+      }
+    },
+    {
+      "name": "GCF_000004695.1_dicty_2.7_genomic.fna",
+      "sequence": {
+        "type": "ReferenceSequenceTrack",
+        "trackId": "GCF_000004695.1_dicty_2.7_genomic.fna-ReferenceSequenceTrack",
+        "adapter": {
+          "type": "IndexedFastaAdapter",
+          "fastaLocation": {
+            "uri": "GCF_000004695.1_dicty_2.7_genomic.fna",
+            "locationType": "UriLocation"
+          },
+          "faiLocation": {
+            "uri": "GCF_000004695.1_dicty_2.7_genomic.fna.fai",
             "locationType": "UriLocation"
           }
         }
@@ -24,5 +42,50 @@
   "defaultSession": {
     "name": "New Session"
   },
-  "tracks": []
+  "tracks": [
+    {
+      "type": "FeatureTrack",
+      "trackId": "genomic.sorted.gff",
+      "name": "genomic.sorted.gff",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "genomic.sorted.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "genomic.sorted.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "GCA_000004695.1_dicty_2.7_genomic.fna"
+      ]
+    },
+    {
+      "type": "FeatureTrack",
+      "trackId": "genomic.gff",
+      "name": "genomic.gff",
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "genomic.gff.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "genomic.gff.gz.tbi",
+            "locationType": "UriLocation"
+          },
+          "indexType": "TBI"
+        }
+      },
+      "assemblyNames": [
+        "GCF_000004695.1_dicty_2.7_genomic.fna"
+      ]
+    }
+  ]
 }
