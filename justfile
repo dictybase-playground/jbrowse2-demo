@@ -5,6 +5,6 @@ add-assembly-from-fasta input:
 add-track-from-gff input:
   npx @jbrowse/cli remove-track {{input}}.gz --out public
   # sort gff file
-  npx @jbrowse/cli sort-gff {{input}} | bgzip > {{input}}.gz
-  tabix {{input}}.gz
-  npx @jbrowse/cli add-track {{input}}.gz --load copy --out public
+  npx @jbrowse/cli sort-gff {{input}} | bgzip > {{input}}.sorted.gz
+  tabix {{input}}.sorted.gz
+  npx @jbrowse/cli add-track {{input}}.sorted.gz --load copy --out public
