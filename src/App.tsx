@@ -1,36 +1,15 @@
 import { useState, useEffect } from "react"
 import { createViewState, JBrowseApp } from "@jbrowse/react-app2"
 import './App.css'
+import { config } from "./config"
 
 type ViewModel = ReturnType<typeof createViewState>
 const App = () => {
   const [viewState, setViewState] = useState<ViewModel>()
 
   useEffect(() => {
-    const loadConfig = async () => {
-      const response = await fetch("/config.json")
-      const config = await response.json()
-      const state = createViewState({
-        config: {
-          ...config,
-
-          // note: workers not working in dev mode currently, planning on workaround soon
-          // configuration: {
-          //   rpc: {
-          //     defaultDriver: 'WebWorkerRpcDriver',
-          //   },
-          // },
-        },
-
-        // makeWorkerInstance: () => {
-        //   return new Worker(new URL('./rpcWorker', import.meta.url), {
-        //     type: 'module',
-        //   })
-        // },
-      })
-      setViewState(state)
-    }
-    loadConfig()
+    const state = createViewState({ config })
+    setViewState(state)
   }, [])
 
   if (!viewState) {
