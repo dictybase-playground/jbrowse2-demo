@@ -2,6 +2,8 @@ const config = {
   assemblies: [
     {
       name: "hg38",
+      // Alternate name for assemblies of the same genome. Can be used to associate a track from a
+      // different assembly to this one.
       aliases: ["GRCh38"],
       sequence: {
         type: "ReferenceSequenceTrack",
@@ -22,11 +24,14 @@ const config = {
           }
         }
       },
+      // Helps resolve differently named assembly regions as the same entity.
+      // Removing this property disables the ability to search by alternative names
+      // e.g. `1` cannot be searched as `chr 1`
       refNameAliases: {
         adapter: {
           type: "RefNameAliasAdapter",
           location: {
-            uri: "https://jbrowse.org/genomes/GRCh38/hg38_aliases.txt",
+            uri: "http://localhost:8080/hg38_aliases.txt",
             locationType: "UriLocation"
           }
         }
