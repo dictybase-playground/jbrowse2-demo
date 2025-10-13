@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "serve": "npx http-server data --cors='Access-Control-Allow-Origin'",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
