@@ -45,9 +45,31 @@ const config = {
       name: "NCBI RefSeq Genes",
       assemblyNames: ["hg38"],
       adapter: {
+        // An appropriate adapter type needs to be specified for the provided data to be parsed properly.
         type: "Gff3TabixAdapter",
         uri: "http://localhost:8080/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
       }
+    }
+  ],
+  aggregateTextSearchAdapters: [
+    {
+      type: "TrixTextSearchAdapter",
+      textSearchAdapterId: "hg38-index",
+      ixFilePath: {
+        uri: "http://localhost:8080/trix/hg38.ix",
+        locationType: "UriLocation"
+      },
+      ixxFilePath: {
+        uri: "http://localhost:8080/trix/hg38.ixx",
+        locationType: "UriLocation"
+      },
+      metaFilePath: {
+        uri: "http://localhost:8080/trix/hg38_meta.json",
+        locationType: "UriLocation"
+      },
+      assemblyNames: [
+        "hg38"
+      ]
     }
   ],
   defaultSession: {
