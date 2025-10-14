@@ -49,8 +49,21 @@ const config = {
         type: "Gff3TabixAdapter",
         uri: "http://localhost:8080/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
       }
-    }
+    },
+    {
+      type: 'VariantTrack',
+      trackId:
+        'ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf',
+      name: '1000 Genomes Variant Calls',
+      assemblyNames: ['hg38'],
+      category: ['1000 Genomes', 'Variants'],
+      adapter: {
+        type: 'VcfTabixAdapter',
+        uri: 'http://localhost:8080/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz',
+      },
+    },
   ],
+  // Allows text searching by gene names.
   aggregateTextSearchAdapters: [
     {
       type: "TrixTextSearchAdapter",
