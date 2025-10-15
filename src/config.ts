@@ -9,6 +9,7 @@ const config = {
         type: "ReferenceSequenceTrack",
         trackId: "P6R5xbRqRr",
         adapter: {
+          // Can be BgzipFastaAdapter (.fa.gz, fa.gz.gzi, .fa.gz.fai), IndexedFastaAdapter (.fa, .fai), ChromSizesAdapter, or TwoBitAdapter (2bit).
           type: "BgzipFastaAdapter",
           fastaLocation: {
             uri: "http://localhost:8080/hg38.prefix.fa.gz",
@@ -51,15 +52,15 @@ const config = {
       }
     },
     {
-      type: 'VariantTrack',
+      type: "VariantTrack",
       trackId:
-        'ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf',
-      name: '1000 Genomes Variant Calls',
-      assemblyNames: ['hg38'],
-      category: ['1000 Genomes', 'Variants'],
+        "ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf",
+      name: "1000 Genomes Variant Calls",
+      assemblyNames: ["hg38"],
+      category: ["1000 Genomes", "Variants"],
       adapter: {
-        type: 'VcfTabixAdapter',
-        uri: 'http://localhost:8080/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz',
+        type: "VcfTabixAdapter",
+        uri: "http://localhost:8080/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz",
       },
     },
   ],
