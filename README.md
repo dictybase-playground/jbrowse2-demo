@@ -46,13 +46,6 @@ The application expects genome data to be served from `http://localhost:8080`:
 
 You'll need to set up a local file server on port 8080 to serve these files from the `public/` directory.
 
-## Tech Stack
-
-- **Framework**: React 19.1.1
-- **Build Tool**: Vite 7.0.0
-- **Language**: TypeScript 5.8.3
-- **Genome Browser**: @jbrowse/react-app2 3.6.5
-
 ### JBrowse Configuration (`src/config.ts`)
 
 The JBrowse configuration defines:
