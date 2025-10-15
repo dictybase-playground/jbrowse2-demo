@@ -9,7 +9,7 @@ const config = {
         type: "ReferenceSequenceTrack",
         trackId: "P6R5xbRqRr",
         adapter: {
-          // Can be BgzipFastaAdapter (.fa.gz, fa.gz.gzi, .fa.gz.fai), IndexedFastaAdapter (.fa, .fai), ChromSizesAdapter, or TwoBitAdapter (2bit).
+          // Can be BgzipFastaAdapter (.fa.gz, fa.gz.gzi, .fa.gz.fai), IndexedFastaAdapter (.fa, .fai), UnindexedFastaAdapter (.fa), ChromSizesAdapter, or TwoBitAdapter (2bit).
           type: "BgzipFastaAdapter",
           fastaLocation: {
             uri: "http://localhost:8080/hg38.prefix.fa.gz",
@@ -46,7 +46,8 @@ const config = {
       name: "NCBI RefSeq Genes",
       assemblyNames: ["hg38"],
       adapter: {
-        // An appropriate adapter type needs to be specified for the provided data to be parsed properly.
+        // An appropriate adapter type needs to be specified for the provided data to be parsed properly: Gff3TabixAdapter (gff.gz, gff.gz.tbi) or Gff3Adapter (gff.gz).
+        // The .gff.gz.tbi file is assumed to be the `{uri below}.tbi`
         type: "Gff3TabixAdapter",
         uri: "http://localhost:8080/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
       }
