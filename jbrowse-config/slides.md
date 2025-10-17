@@ -88,7 +88,6 @@ Each assembly includes a `sequence` object defining the reference sequence track
 
 <div>
 
-### File-based Adapters
 - **BgzipFastaAdapter** - `.fa.gz` files
   - Requires `.fa.gz.gzi` and `.fa.gz.fai` indices
 - **IndexedFastaAdapter** - `.fa` with `.fai` index
@@ -98,12 +97,53 @@ Each assembly includes a `sequence` object defining the reference sequence track
 
 <div>
 
-### Other Adapters
 - **ChromSizesAdapter** - Chromosome sizes files
 - **TwoBitAdapter** - `.2bit` format files
 
 </div>
 
+</div>
+
+---
+layout: default
+---
+
+# FASTA Format (.fa)
+
+The FASTA format is a text-based format for representing nucleotide or protein sequences.
+
+## Structure
+
+<div class="mt-4">
+
+**Header Line**
+- Starts with `>` followed by the contig/sequence name
+- Example: `>chr1` or `>NM_001301717.2`
+
+**Sequence Lines**
+- Nucleotide bases (A, C, G, T) or amino acids
+- Can be split across multiple lines
+
+</div>
+
+---
+layout: default
+---
+
+# FASTA Index (.fai)
+
+The `.fai` index file enables efficient random access to sequences in FASTA files.
+
+## Index Format (5 columns)
+
+1. **Contig name** - Matches the name after `>` in the FASTA file
+2. **Number of bases** - Total length of the contig sequence
+3. **Byte offset** - File position where the sequence begins
+4. **Bases per line** - Number of bases on each line in the FASTA
+5. **Bytes per line** - Total bytes per line (including newline characters)
+
+<div class="text-sm mt-4 opacity-75">
+The index allows JBrowse to quickly jump to specific genomic regions without loading the entire file
 </div>
 
 ---
@@ -201,7 +241,6 @@ Display genomic annotations such as genes, transcripts, and other features.
   }
 }
 ```
-
 ---
 layout: default
 ---
@@ -209,6 +248,8 @@ layout: default
 # Feature Track Adapters
 
 ## Supported Adapter Types
+
+<div class="grid grid-cols-2 gap-4">
 
 <div class="mt-8">
 
@@ -223,6 +264,63 @@ layout: default
 - For unindexed GFF3 files (`.gff.gz`)
 - Simpler setup but slower for large files
 
+</div>
+
+<div class="mt-8">
+
+**BedAdapter**
+- `.bed` files
+</div>
+
+</div>
+
+---
+layout: default
+---
+
+# GFF3 Format
+
+GFF3 (General Feature Format version 3) is a tab-delimited text format for describing genomic features.
+
+## Structure
+
+<div class="mt-4">
+
+- Tab-separated columns (9 required columns)
+- Plain text or compressed (`.gff` or `.gff.gz`)
+- Hierarchical features using Parent-Child relationships
+- Commonly used for gene annotations, transcripts, and other genomic features
+
+</div>
+
+<div class="text-sm mt-4 opacity-75">
+Example features: genes, mRNAs, exons, CDSs, regulatory elements
+</div>
+
+---
+layout: default
+---
+
+# GFF3 Format - 9 Columns
+
+<div class="text-sm">
+
+| Column | Name | Description |
+|--------|------|-------------|
+| 1 | **seqid** | Chromosome or scaffold name (e.g., `chr1`) |
+| 2 | **source** | Program or data source that generated the feature |
+| 3 | **type** | Feature type - must be a SOFA ontology term (e.g., `gene`, `mRNA`) |
+| 4 | **start** | Start position (1-based, inclusive) |
+| 5 | **end** | End position (1-based, inclusive) |
+| 6 | **score** | Floating point value (or `.` if not applicable) |
+| 7 | **strand** | `+` (forward), `-` (reverse), or `.` (unstranded) |
+| 8 | **phase** | For CDS features: `0`, `1`, `2` (codon reading frame) |
+| 9 | **attributes** | Semicolon-separated tag-value pairs (e.g., `ID=gene1;Name=ABC1`) |
+
+</div>
+
+<div class="text-sm mt-4 opacity-75">
+Common attributes: ID, Name, Parent, Alias, Note
 </div>
 
 ---
