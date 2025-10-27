@@ -341,3 +341,419 @@ This configuration creates a JBrowse 2 instance with:
 5. A default view displaying **chromosome 1**
 
 </div>
+
+---
+layout: section
+---
+
+# SPARQLAdapter
+
+Accessing genomic data from RDF stores via SPARQL endpoints
+
+---
+layout: default
+---
+
+# SPARQLAdapter Overview
+
+The SPARQLAdapter enables JBrowse to display genomic information from RDF data stores accessed via SPARQL endpoints.
+
+## Key Features
+
+- Query semantic web databases for genomic features
+- Compatible with FeatureTrack and VariantTrack
+- Supports dynamic queries with template placeholders
+- Handles hierarchical subfeatures
+- Works with standard FALDO ontology
+
+<br>
+
+<div class="text-sm opacity-75">
+Source: <code>plugins/rdf/src/SPARQLAdapter/</code>
+</div>
+
+---
+layout: default
+---
+
+# Compatible Track Types
+
+SPARQLAdapter works with multiple track types depending on the data your query provides.
+
+<div class="mt-8">
+
+## Recommended Track Types
+
+- **FeatureTrack** - Most common use case for genomic features
+  - Genes, transcripts, regulatory elements
+- **VariantTrack** - When query provides variant-specific fields
+  - Requires: REF, ALT, QUAL, etc.
+- **Other track types** - As long as query provides required fields
+
+</div>
+
+<div class="text-sm mt-4 opacity-75">
+The track type determines what fields are displayed and how features are rendered
+</div>
+
+---
+layout: two-cols
+---
+
+# Basic SPARQL Configuration
+
+A minimal SPARQLAdapter configuration requires three main components.
+
+## Required Components
+
+1. **Track metadata** - Type, ID, name
+2. **SPARQL endpoint** - URI location
+3. **Query template** - SPARQL query with placeholders
+
+::right::
+
+```json
+{
+  "type": "FeatureTrack",
+  "trackId": "my_sparql_track",
+  "name": "SPARQL Features",
+  "assemblyNames": ["hg38"],
+  "adapter": {
+    "type": "SPARQLAdapter",
+    "endpoint": {
+      "uri": "https://example.com/sparql",
+      "locationType": "UriLocation"
+    },
+    "queryTemplate": "..."
+  }
+}
+```
+
+---
+layout: default
+---
+
+# SPARQL Required Fields
+
+## endpoint
+
+<div class="mt-4">
+
+**Type:** fileLocation object
+
+**Description:** URL of the SPARQL endpoint
+
+```json
+"endpoint": {
+  "uri": "https://www.ebi.ac.uk/rdf/services/sparql",
+  "locationType": "UriLocation"
+}
+```
+
+</div>
+
+## queryTemplate
+
+<div class="mt-4">
+
+**Type:** string
+
+**Description:** SPARQL query where `{start}`, `{end}`, and `{refName}` are replaced for each request
+
+</div>
+
+<div class="text-sm mt-4 opacity-75">
+Source: plugins/rdf/src/SPARQLAdapter/configSchema.ts:3-40
+</div>
+
+---
+layout: default
+---
+
+# SPARQL Optional Fields (1/2)
+
+## refNamesQueryTemplate
+
+<div class="mt-4">
+
+**Type:** string (default: empty)
+
+**Description:** SPARQL query that returns possible refNames in a `?refName` column
+
+```sparql
+SELECT DISTINCT ?refName WHERE {
+  ?s faldo:reference ?refName
+}
+```
+
+</div>
+
+## refNames
+
+<div class="mt-4">
+
+**Type:** string array (default: `[]`)
+
+**Description:** Possible refNames (ignored if refNamesQueryTemplate is provided)
+
+```json
+"refNames": ["chr1", "chr2", "chr3", "chrX", "chrY"]
+```
+
+</div>
+
+---
+layout: default
+---
+
+# SPARQL Optional Fields (2/2)
+
+## additionalQueryParams
+
+<div class="mt-4">
+
+**Type:** string array (default: `[]`)
+
+**Description:** Additional parameters to add to the query URL
+
+**Use case:** Specify response format or other endpoint-specific parameters
+
+```json
+"additionalQueryParams": ["format=json"]
+```
+
+</div>
+
+<div class="mt-8 text-sm opacity-75">
+
+The final request URL is constructed as:
+
+`{endpoint}?query={encodedQueryTemplate}{additionalQueryParams}`
+
+</div>
+
+---
+layout: default
+---
+
+# Query Template Requirements
+
+Your SPARQL query **must** return these three variables:
+
+<div class="mt-8">
+
+## Required Variables
+
+| Variable | Description |
+|----------|-------------|
+| **?start** | Start position of the feature (integer) |
+| **?end** | End position of the feature (integer) |
+| **?uniqueId** | Unique identifier for the feature (string) |
+
+</div>
+
+<div class="mt-8">
+
+## Optional Variables
+
+Any additional variables will be added to the feature data:
+- `?name` - Feature name
+- `?note` - Description/notes
+- `?strand` - Strand information (1, -1, or 0)
+- `?type` - Feature type
+- Custom properties...
+
+</div>
+
+<div class="text-sm mt-4 opacity-75">
+Source: plugins/rdf/src/SPARQLAdapter/SPARQLAdapter.ts:136-142
+</div>
+
+---
+layout: default
+---
+
+# Template Placeholders
+
+The query template supports dynamic placeholders replaced at query time:
+
+<div class="mt-8">
+
+| Placeholder | Description | Example Value |
+|-------------|-------------|---------------|
+| **{refName}** | Reference sequence name | `"chr1"`, `"chrX"` |
+| **{start}** | Query start position | `1000000` |
+| **{end}** | Query end position | `2000000` |
+
+</div>
+
+<div class="mt-8">
+
+## Usage Example
+
+```sparql
+?location faldo:reference
+  <http://example.org/genome/{refName}> .
+
+FILTER ( (?start >= {start}) && (?end <= {end}) )
+```
+
+</div>
+
+<div class="text-sm mt-4 opacity-75">
+These placeholders are replaced with actual values when querying the endpoint
+</div>
+
+---
+layout: default
+---
+
+# Example Query Template (1/2)
+
+```sparql {1-4|6|8-14|15-20|21-23}
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX  faldo: <http://biohackathon.org/resource/faldo#>
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/>
+
+SELECT DISTINCT ?gene (?id AS ?uniqueId) (?label AS ?name) (?desc AS ?note) ?strand ?start ?end
+
+WHERE {
+  VALUES ?location_type {
+    faldo:ForwardStrandPosition
+    faldo:ReverseStrandPosition
+    faldo:BothStrandsPosition
+  }
+
+  ?location faldo:begin _:b0 .
+  _:b0 rdf:type ?location_type ;
+       faldo:position ?faldo_begin .
+  ?location faldo:end _:b1 .
+  _:b1 rdf:type ?location_type ;
+       faldo:position ?faldo_end .
+
+  ?location faldo:reference
+    <http://rdf.ebi.ac.uk/resource/ensembl/97/homo_sapiens/GRCh38/{refName}> .
+```
+
+---
+layout: default
+---
+
+# Example Query Template (2/2)
+
+```sparql {1-5|7-9|11-12|14}
+  ?gene rdf:type ?type ;
+        rdfs:label ?label ;
+        dc:description ?desc ;
+        dc:identifier ?id ;
+        faldo:location ?location
+
+  BIND(if((?location_type = faldo:ForwardStrandPosition), 1,
+          if((?location_type = faldo:ReverseStrandPosition), -1, 0))
+       AS ?strand)
+
+  BIND(if((?strand = -1), ?faldo_end, ?faldo_begin) AS ?start)
+  BIND(if((?strand = -1), ?faldo_begin, ?faldo_end) AS ?end)
+
+  FILTER ( (?start >= {start}) && (?end <= {end}) )
+}
+```
+
+<div class="text-sm mt-4 opacity-75">
+This query retrieves genes with proper strand handling from an Ensembl RDF endpoint
+</div>
+
+---
+layout: default
+---
+
+# Subfeatures - Method 1
+
+## Parent-Child Relationship via ?parentUniqueId
+
+Include a `?parentUniqueId` variable to create parent-child relationships.
+
+<div class="mt-4">
+
+**How it works:**
+- Feature with `?parentUniqueId` becomes a subfeature
+- Parent is the feature with matching `?uniqueId`
+
+**Example:**
+
+| uniqueId | start | end | parentUniqueId | type |
+|----------|-------|-----|----------------|------|
+| gene001 | 1000 | 5000 | - | gene |
+| tx001 | 1100 | 4900 | gene001 | transcript |
+| exon001 | 1100 | 1500 | tx001 | exon |
+
+Result: gene → transcript → exon hierarchy
+
+</div>
+
+<div class="text-sm mt-4 opacity-75">
+Source: plugins/rdf/src/SPARQLAdapter/SPARQLAdapter.ts:180-223
+</div>
+
+---
+layout: default
+---
+
+# Subfeatures - Method 2
+
+## Nested Features via Prefixes
+
+Prefix variables with `sub_` for subfeatures:
+
+<div class="mt-4">
+
+**Prefix levels:**
+- First level: `sub_uniqueId`, `sub_start`, `sub_end`, `sub_type`
+- Second level: `sub_sub_uniqueId`, `sub_sub_start`, `sub_sub_end`
+- And so on...
+
+</div>
+
+<div class="mt-4 text-xs">
+
+| uniqueId | type | start | end | sub_uniqueId | sub_type | sub_start | sub_end | sub_sub_uniqueId | sub_sub_type | sub_sub_start | sub_sub_end |
+|----------|------|-------|-----|--------------|----------|-----------|---------|------------------|--------------|---------------|-------------|
+| gene0001 | gene | 10430102 | 10452003 | tx0001 | transcript | 10430518 | 10442405 | exon0001 | exon | 10430518 | 10430568 |
+| gene0001 | gene | 10430102 | 10452003 | tx0001 | transcript | 10430518 | 10442405 | exon0002 | exon | 10432568 | 10433965 |
+
+</div>
+
+<div class="mt-4 text-sm opacity-75">
+Result: One gene feature with one transcript subfeature containing two exon subfeatures
+</div>
+
+---
+layout: default
+---
+
+# Complete SPARQL Configuration
+
+```json {all|2-5|7-10|11|12-15}
+{
+  "type": "FeatureTrack",
+  "trackId": "ensembl_genes_sparql",
+  "name": "Ensembl Genes (SPARQL)",
+  "assemblyNames": ["hg38"],
+  "category": ["Genes", "RDF"],
+  "adapter": {
+    "type": "SPARQLAdapter",
+    "endpoint": {
+      "uri": "https://www.ebi.ac.uk/rdf/services/sparql",
+      "locationType": "UriLocation"
+    },
+    "queryTemplate": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ...",
+    "refNamesQueryTemplate": "SELECT DISTINCT ?refName WHERE { ?location faldo:reference ?refName }",
+    "additionalQueryParams": ["format=json"]
+  }
+}
+```
+
+<div class="text-sm mt-4 opacity-75">
+This configuration creates a track that queries Ensembl's RDF endpoint for gene features
+</div>
