@@ -268,8 +268,15 @@ layout: default
 
 <div class="mt-8">
 
-**BedAdapter**
-- `.bed` files
+** Others **
+
+- BedAdapter (explicit)
+- GtfAdapter
+- BedTabixAdapter
+- BigBedAdapter
+- NCListAdapter
+- SPARQLAdapter
+
 </div>
 
 </div>
