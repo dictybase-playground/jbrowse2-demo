@@ -133,6 +133,61 @@ To use this SPARQL server with JBrowse 2, add a track configuration like this:
 }
 ```
 
+## Testing with JBrowse 2
+
+Follow these steps to test the SPARQL server with JBrowse 2:
+
+### Step 1: Start the SPARQL Server
+
+```bash
+cd sparql-server
+go run main.go
+```
+
+You should see:
+```
+Starting SPARQL server on http://localhost:8090
+SPARQL endpoint: http://localhost:8090/sparql
+```
+
+### Step 2: Verify Server is Running
+
+Open your browser to `http://localhost:8090` - you should see the information page.
+
+Or test the endpoint directly:
+```bash
+curl "http://localhost:8090/sparql?query=SELECT%20?uniqueId%20?start%20?end%20WHERE%20{%20FILTER%20((?start%20>=%200)%20&&%20(?end%20<=%20100000))%20}"
+```
+
+### Step 3: Start JBrowse 2
+
+Make sure your JBrowse 2 instance is running. If using the demo configuration in this repository, the track is already configured in `src/config.ts`.
+
+### Step 4: View the Track
+
+1. Open JBrowse 2 in your browser
+2. Open the **track selector** (hamburger menu icon)
+3. Navigate to **SPARQL → Testing → SPARQL Test Features**
+4. Enable the track
+5. Navigate to a region containing dummy data (positions 10000-80000 on any chromosome)
+6. You should see 5 gene features displayed:
+   - GENE1 (10000-20000)
+   - GENE2 (25000-35000)
+   - GENE3 (40000-50000)
+   - GENE4 (55000-65000)
+   - GENE5 (70000-80000)
+
+### Step 5: Verify Data Loading
+
+Check the browser's developer console (F12) for network requests to `http://localhost:8090/sparql`. You should see successful requests when navigating to regions with features.
+
+Check the SPARQL server logs for output like:
+```
+Received query: SELECT ?uniqueId ?start ?end ?name ?note ?strand ?type WHERE { FILTER ( (?start >= 0) && (?end <= 100000) ) }
+Parsed - refName: chr1, start: 0, end: 100000
+Returned 5 features
+```
+
 ## Development
 
 ### Modifying Dummy Data
