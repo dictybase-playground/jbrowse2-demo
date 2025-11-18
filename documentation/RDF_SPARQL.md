@@ -6,8 +6,7 @@ A comprehensive guide to understanding RDF (Resource Description Framework) and 
 
 - [What is RDF?](#what-is-rdf)
 - [What is SPARQL?](#what-is-sparql)
-- [How They Work Together](#how-they-work-together)
-- [RDF Serialization Formats](#rdf-serialization-formats)
+- [How They Work Together](#how-they-work-together) [RDF Serialization Formats](#rdf-serialization-formats)
 - [Real-World Examples](#real-world-examples)
 
 ---
