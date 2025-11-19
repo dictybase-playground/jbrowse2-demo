@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { createViewState, JBrowseApp } from "@jbrowse/react-app2"
 import './App.css'
-import { config } from "./config"
+import config from "./config"
 
 type ViewModel = ReturnType<typeof createViewState>
 const App = () => {
